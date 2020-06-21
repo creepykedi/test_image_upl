@@ -1,0 +1,39 @@
+Пример деплоя на heroku:
+
+установить gunicorn, whitenoise, django-heroku, django-storages, psycopg2
+
+добавить в settings:
+import django_heroku
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MIDDLEWARE ='whitenoise.middleware.WhiteNoiseMiddleware',
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+внизу настроек чтобы юзать env с хероку:
+django_heroku.settings(locals())
+
+создать Procfile с:
+web: gunicorn {project}.wsgi
+убедиться что в wsgi.py имя проекта корректно
+
+создать url проекта на хероку, добавить его в ALLOWED HOSTS
+
+выполнить команду для миграции базы данных:
+heroku run python3 manage.py migrate
+
+Создать AWS S3 бакет для того чтоб сервить файлы, передать данные о нем в env к heroku в формате heroku config:add env=value
+
+добавить в settings:
+AWS_S3_FILE_OVERWRITE = False
+AWS_ACCESS_KEY_ID = os.environ.get('ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = os.environ.get('SEC_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
+AWS_DEFAULT_ACL = None
+
+указать на storage
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+включить кэш для бакета:
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400'
+}
+добавить полиси кэширования в бакет
