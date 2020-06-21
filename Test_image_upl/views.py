@@ -29,12 +29,12 @@ def upload(request):
             if file or url:
                 if file:
                     uploadform.save()
-                    imgObject = Img.objects.get(pk=uploadform.instance.id)
+                    imgObject = uploadform.instance
                     Img.get_hash(imgObject)
 
                 if url:
                     uploadform.save()
-                    imgObject = Img.objects.get(pk=uploadform.instance.id)
+                    imgObject = uploadform.instance
                     image = requests.get(url)
                     data = ContentFile(image.content)
                     Img.get_hash(imgObject)
@@ -50,6 +50,7 @@ def resize_image(set_width, set_height, set_size, imgbytes):
         raise ValidationError
 
     width, height = pil_img.size
+    Imageformat = pil_img.format
     if set_width and set_height:
         try:
             pil_img = pil_img.resize((int(set_width), int(set_height)))
@@ -72,7 +73,6 @@ def resize_image(set_width, set_height, set_size, imgbytes):
 
     in_mem_file = io.BytesIO()
     n = 100
-    Imageformat = pil_img.format
     pil_img.save(in_mem_file, format=Imageformat)
     imgbytes = in_mem_file.getvalue()
 
@@ -92,7 +92,6 @@ def resize_image(set_width, set_height, set_size, imgbytes):
 
 def image_view(request, image_hash, *args, **kwargs):
     image = get_object_or_404(Img, hash=image_hash)
-
     imgbytes = storage.open(image.file.name, 'rb')
     set_width = set_height = set_size = None
 
