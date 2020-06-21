@@ -2,16 +2,17 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from Test_image_upl.views import resize_image
 from PIL import Image
-import os, io
+import io
+from pathlib import Path
 
 
 class TestViews(TestCase):
     def setUp(self):
-        os.chdir(r'C:\Users\Evgen\PycharmProjects\Test_image_upl\Test_image_upl\tests')
+        img_path = Path(__file__).parent.joinpath('4u8cwjoeffz11.jpg')
         self.client = Client()
         self.index = reverse('index')
         self.upload = reverse('upload')
-        self.pic = open('4u8cwjoeffz11.jpg', 'rb')
+        self.pic = open(img_path, 'rb')
 
     def test_index(self):
         response = self.client.get(self.index)
