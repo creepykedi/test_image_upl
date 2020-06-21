@@ -46,10 +46,12 @@ def resize_image(set_width, set_height, set_size, imgbytes):
         pil_img = pil_img.resize((int(set_width), int(set_height)))
 
     elif set_height:
+        assert set_height != 0
         resize_by_height = int(set_height)/height
         pil_img = pil_img.resize((int(width*resize_by_height), int(set_height)))
 
     elif set_width:
+        assert set_width != 0
         resize_by_width = int(set_width)/width
         pil_img = pil_img.resize((int(set_width), int(height // (1 / resize_by_width))))
 
