@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page</title>
+     {% load static %}
+</head>
+<body>
+
+<h1>Pictures</h1>
+    <ol>
+        {% for image in image_list %}
+            <li> <a href="{% url 'redirect_image' image.hash %}">{{ image }}</a></li>
+        {% endfor %}
+    </ol>
+<a href="{% url 'upload' %}">Upload new image</a>
+</body>
+</html>

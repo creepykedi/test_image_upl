@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload images</title>
+</head>
+<body>
+ <div class="upload">
+    <form method="post" id="upload" class="file-upload hide add-image" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ upload_form.as_p }}
+        <button type="submit">Upload</button>
+    </form>
+</div>
+ <br>
+<a href=" {% url 'index' %}">Return</a>
+</body>
+</html>
